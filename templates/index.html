@@ -1,0 +1,172 @@
+<html>
+<title>CO2 Emission Traffic Footage Calculator</title>
+<head>
+    <link rel="stylesheet" href="../static/dashboard.css">
+    <link href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" rel="stylesheet">
+    <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- the sidebar section -->
+        <div class="sidebar">
+            <h3 class="sidebar-title">Dashboard</h3>
+            <div class="nav">
+                <div class="slider"></div>
+                <button id="uploadBtn">Upload</button>
+                <button id="mapBtn">Map</button>
+            </div>
+            <div class="sidebar-divider"></div>
+             <div id="analyticsSideSheet" class="analytics-side-sheet">
+                    <h3>Traffic Analytics</h3>
+                    <div class="stat-card">
+                        <span>Total Vehicles</span>
+                        <span id="totalVehicles">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span>Cars</span>
+                        <span id="totalCars">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span>Buses</span>
+                        <span id="totalBuses">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span>Motorcycles</span>
+                        <span id="totalMotorcycles">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span>Trucks</span>
+                        <span id="totalTrucks">0</span>
+                    </div>
+                </div>
+                <div class="sidebar-divider"></div>
+
+        <h3 class="total-co2-estimates">Carbon Emissions</h3>
+        <div class="co2-estimates">
+            <div class="stat-card">
+                <span>Total CO₂</span>
+                <span id="totalCO2">0 kg</span>
+            </div>
+            <div class="stat-card">
+                <span>Cars</span>
+                <span id="totalCO2Cars">0 kg</span>
+            </div>
+            <div class="stat-card">
+                <span>Buses</span>
+                <span id="totalCO2Buses">0 kg</span>
+            </div>
+            <div class="stat-card">
+                <span>Motorcycles</span>
+                <span id="totalCO2Motorcycles">0 kg</span>
+            </div>
+            <div class="stat-card">
+                <span>Trucks</span>
+                <span id="totalCO2Trucks">0 kg</span>
+            </div>
+        </div>
+            <div class="sidebar-divider"></div>
+            <h3 class="vehicle-distribution">
+                Emissions Distribution
+            </h3>
+            <div class="pie-chart-container">
+                <canvas id="co2PieChart"></canvas>
+            </div>
+
+
+        </div>
+        <!-- the upload - drag/drop - choose file section -->
+        <div id="uploadSection">
+            <div class="upload-dashboard-wrapper">
+                <div class="upload-row-container">
+                    <div id="drop-zone" class="drop-zone">
+                        <div class="drop-zone-content" id="upload-text">
+                            <h3>Click to upload a video file</h3>
+                        </div>
+                        <div id="loading-message">
+                            <div class="spinner"></div>
+                                <p>Analysing traffic footage...</p>
+                            </div>
+                        <video id="uploaded-video" controls style="display:none;"></video>
+                            <input type="file" id="file-input" accept="video/*" hidden>
+                        </div>
+                    </div>
+                <div class="graph-row-container">
+                    <div class="graph-header">
+                        <h4>Live Graph - Vehicle Count against Time</h4>
+                    </div>
+                    <div class="vehicle-filters">
+                        <button class="filter-btn cars active">Cars</button>
+                        <button class="filter-btn motorcycles active">Motorcycles</button>
+                        <button class="filter-btn buses active">Buses</button>
+                        <button class="filter-btn trucks active">Trucks</button>
+                    </div>
+                    <div class="graph-body">
+                        <canvas id="emissionsChart" height="400"></canvas>
+                    </div>
+                </div>
+                    </div>
+        </div>
+    <!-- the map section -->
+        <div id="mapSection" style="display:none;">
+            <div class="map-dashboard-wrapper">
+                <div class="map-row-container">
+                    <div class="map-view-wrapper">
+                        <div id="map"></div>
+                <!-- the camera SideSheet -->
+                        <div id="cameraSideSheet" class="camera-side-sheet">
+                            <div class="sheet-header">
+                                <h3 id="cameraTitle">Camera Feed</h3>
+                                <button class="exit-btn" aria-label="Close">&times;</button>
+                            </div>
+                            <div class="sheet-body">
+                        <!-- section for the live video -->
+                                <div class="video-stream-container">
+                                    <p>Live Video Stream</p>
+                                    <!-- video js player -->
+                                    <video
+                                        id="traffic-video"
+                                        class="video-js vjs-default-skin vjs-big-play-centered"
+                                        controls
+                                        preload="auto"
+                                        autoplay
+                                        muted
+                                        playsinline
+                                        style="width: 100%; height: auto; aspect-ratio: 16/9;">
+                                        <!-- fallback -->
+                                        <source src="" type="application/x-mpegURL">
+                                    </video>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- graph filter buttons -->
+                <div class="graph-row-container">
+
+                    <div class="graph-header">
+                        <h4>Live Graph - Vehicle Count against Time</h4>
+                    </div>
+
+                    <div class="vehicle-filters">
+                        <button class="filter-btn cars active">Cars</button>
+                        <button class="filter-btn motorcycles active">Motorcycles</button>
+                        <button class="filter-btn buses active">Buses</button>
+                        <button class="filter-btn trucks active">Trucks</button>
+                    </div>
+
+                    <div class="graph-body">
+                        <canvas id="emissionsChart" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script> const cameras = {{ cameras | tojson }}; </script>
+    <!-- script -->
+    <script src="../static/script.js"></script>
+</body>
+</html>
